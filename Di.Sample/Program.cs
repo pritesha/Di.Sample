@@ -19,7 +19,17 @@ namespace Di.Sample
         {
             var services = new ServiceCollection();
 
-            services.AddTransient<IGreetingsService, GreetingsService>();
+            services.Scan(scan =>
+            {
+                scan.FromAssemblyOf<SimpleApplication>()
+                .AddClasses(classes =>
+                {
+                    classes.InNamespaceOf<GreetingsService>();
+                })
+                .AsImplementedInterfaces()
+                .WithScopedLifetime();
+            });
+
             services.AddSingleton<SimpleApplication>();
 
             return services;
